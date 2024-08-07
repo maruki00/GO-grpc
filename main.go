@@ -21,9 +21,9 @@ func (o *MyInvoice) Create(context context.Context, _ *invoicer.CreateRequest) (
 }
 
 func main() {
-	listner, err := net.Listen("tcp", "8089")
+	listner, err := net.Listen("tcp", ":9999")
 	if err != nil {
-		log.Fatal("Invalid Address")
+		log.Fatal("Invalid Address : ", err)
 	}
 
 	serverRigister := grpc.NewServer()
