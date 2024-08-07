@@ -1,9 +1,12 @@
 syntax = "proto3";
 
+package invoicer;
 
+option go_package="go/grpc";
 
-option go_package = "go-grpc";
-
+service Invoicer {
+  rpc Create(CreateRequest) returns (CreateResponse);
+}
 
 message Amount {
     int64 amount = 1;
