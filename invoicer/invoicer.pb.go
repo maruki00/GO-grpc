@@ -4,7 +4,7 @@
 // 	protoc        v3.21.12
 // source: proto/invoicer.proto
 
-package grpc
+package invoicer
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
