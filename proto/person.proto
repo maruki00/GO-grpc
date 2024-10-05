@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package person;
+
+
+option go_package="go/grpc";
+
+
+// type Person struct {
+//     Id int 
+//     Name string 
+//     Address string
+//     Salary float32
+// } 
+
+service PersonService {
+    rpc Create  (CreateRequest) returns  (CreateResponse);
+    rpc GetByID (GetByIdRequest) returns (GetByIdResponse);
+    rpc Update  (UpdateRequest) returns  (UpdateResponse);
+    rpc Delete  (DeleteRequest) returns  (DeleteResponse);
+    rpc Searach (SearachRequest) returns (SearachResponse);
+}
+message Person {
+    int32 Id = 1; 
+    string Name = 2;     
+    string Address = 3; 
+    float Salary  = 4;
+}
+
+message CreateRequest{
+    string name = 1;
+    string address = 2;
+    float salary = 3; 
+}
+
+message GetByIdRequest{
+    int32 id = 1;
+}
+
+message UpdateRequest{
+    string name = 1;
+    string address = 2;
+    float salary = 3; 
+}
+
+message DeleteRequest{
+    int32 id  = 1;
+}
+
+message SearachRequest{
+    string query = 1;
+}
+
+
+message CreateResponse {
+    string message = 1 ;
+}
+
+message GetByIdResponse {
+    repeated Person result  = 1;
+}
+
+message UpdateResponse {
+    string message = 1;
+}
+
+message DeleteResponse {
+    string message = 1;
+
+}
+
+message SearachResponse {
+    repeated Person result = 1;
+}
