@@ -17,7 +17,7 @@ func NewRepository() *PersonRepository {
 	}
 }
 
-func (obj *PersonRepository) Add(item *models.Person) (*models.Person, error) {
+func (obj *PersonRepository) Create(item *models.Person) (*models.Person, error) {
 	item.Id = obj.id
 	obj.items[obj.id] = item
 	obj.id++
@@ -37,23 +37,17 @@ func (obj *PersonRepository) Delete(id int) error {
 	return nil
 }
 
-func (obj *PersonRepository) Add(item *models.Person) (*models.Person, error) {
-	item.Id = obj.id
-	obj.items = append(obj.items, item)
-	obj.id++
-	return item, nil
+func (obj *PersonRepository) Update(item *models.Person) error {
+	obj.items[item.Id] = item
+	return nil
 }
 
-func (obj *PersonRepository) Add(item *models.Person) (*models.Person, error) {
-	item.Id = obj.id
-	obj.items = append(obj.items, item)
-	obj.id++
-	return item, nil
-}
-
-func (obj *PersonRepository) Add(item *models.Person) (*models.Person, error) {
-	item.Id = obj.id
-	obj.items = append(obj.items, item)
-	obj.id++
-	return item, nil
+func (obj *PersonRepository) Search(query string) ([]*models.Person, error) {
+	var items []*models.Person
+	for id, item := range obj.items {
+		if item.Name == query || item.Address == query {
+			items = append(items, item)
+		}
+	}
+	return items, nil
 }
