@@ -10,7 +10,7 @@ import (
 
 type PersonService struct {
 	internal_grpc.UnimplementedPersonServiceServer
-	repo *repository.PersonRepository
+	Repo *repository.PersonRepository
 }
 
 func (obj *PersonService) Create(context context.Context, in *internal_grpc.CreateRequest) (*internal_grpc.CreateResponse, error) {
@@ -20,7 +20,7 @@ func (obj *PersonService) Create(context context.Context, in *internal_grpc.Crea
 		Address: in.Address,
 		Salary:  in.Salary,
 	}
-	model, err := obj.repo.Create(person)
+	model, err := obj.Repo.Create(person)
 	if err != nil {
 		return &internal_grpc.CreateResponse{
 			Message: err.Error(),
@@ -38,7 +38,7 @@ func (obj *PersonService) Create(context context.Context, in *internal_grpc.Crea
 }
 func (obj *PersonService) GetByID(context context.Context, in *internal_grpc.GetByIdRequest) (*internal_grpc.GetByIdResponse, error) {
 
-	item, err := obj.repo.GetById(int(in.Id))
+	item, err := obj.Repo.GetById(int(in.Id))
 	if err != nil {
 		return &internal_grpc.GetByIdResponse{
 			Result: nil,
@@ -54,11 +54,11 @@ func (obj *PersonService) GetByID(context context.Context, in *internal_grpc.Get
 	}, nil
 }
 func (obj *PersonService) Update(context context.Context, in *internal_grpc.UpdateRequest) (*internal_grpc.UpdateResponse, error) {
-	item, err := obj.repo.GetById(int(in.Id))
+	item, err := obj.Repo.GetById(int(in.Id))
 	if err != nil {
 		return nil, err
 	}
-	err = obj.repo.Update(item)
+	err = obj.Repo.Update(item)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (obj *PersonService) Update(context context.Context, in *internal_grpc.Upda
 }
 func (obj *PersonService) Delete(context context.Context, in *internal_grpc.DeleteRequest) (*internal_grpc.DeleteResponse, error) {
 
-	err := obj.repo.Delete(int(in.Id))
+	err := obj.Repo.Delete(int(in.Id))
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func (obj *PersonService) Delete(context context.Context, in *internal_grpc.Dele
 	}, nil
 }
 func (obj *PersonService) Searach(context context.Context, in *internal_grpc.SearachRequest) (*internal_grpc.SearachResponse, error) {
-	result, err := obj.repo.Search(in.Query)
+	result, err := obj.Repo.Search(in.Query)
 	if err != nil {
 		return nil, err
 	}
