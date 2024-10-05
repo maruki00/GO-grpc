@@ -2,29 +2,95 @@ package internal_services
 
 import (
 	"context"
+	"encoding/json"
+	models "go-grpc/internal/Models"
+	repository "go-grpc/internal/Repository"
 	internal_grpc "go-grpc/internal/grpc"
 )
 
 type PersonService struct {
 	internal_grpc.UnimplementedPersonServiceServer
-	repo *reposiRepository
+	repo *repository.PersonRepository
 }
 
 func (obj *PersonService) Create(context context.Context, in *internal_grpc.CreateRequest) (*internal_grpc.CreateResponse, error) {
 
-	persons = append(persons, nil)
-	return &internal_grpc.CreateResponse{}, nil
+	person := &models.Person{
+		Name:    in.Name,
+		Address: in.Address,
+		Salary:  in.Salary,
+	}
+	model, err := obj.repo.Create(person)
+	if err != nil {
+		return &internal_grpc.CreateResponse{
+			Message: err.Error(),
+		}, nil
+	}
+	msg, err := json.Marshal(model)
+	if err != nil {
+		return &internal_grpc.CreateResponse{
+			Message: err.Error(),
+		}, nil
+	}
+	return &internal_grpc.CreateResponse{
+		Message: string(msg),
+	}, nil
 }
-func (obj *PersonService) GetByID(context context.Context, _ *internal_grpc.GetByIdRequest) (*internal_grpc.GetByIdResponse, error) {
+func (obj *PersonService) GetByID(context context.Context, in *internal_grpc.GetByIdRequest) (*internal_grpc.GetByIdResponse, error) {
 
-	return &internal_grpc.GetByIdResponse{}, nil
+	item, err := obj.repo.GetById(int(in.Id))
+	if err != nil {
+		return &internal_grpc.GetByIdResponse{
+			Result: nil,
+		}, err
+	}
+	return &internal_grpc.GetByIdResponse{
+		Result: &internal_grpc.Person{
+			Id:      int32(item.Id),
+			Name:    item.Name,
+			Address: item.Address,
+			Salary:  item.Salary,
+		},
+	}, nil
 }
-func (obj *PersonService) Update(context context.Context, _ *internal_grpc.UpdateRequest) (*internal_grpc.UpdateResponse, error) {
-	return &internal_grpc.UpdateResponse{}, nil
+func (obj *PersonService) Update(context context.Context, in *internal_grpc.UpdateRequest) (*internal_grpc.UpdateResponse, error) {
+	item, err := obj.repo.GetById(int(in.Id))
+	if err != nil {
+		return nil, err
+	}
+	err = obj.repo.Update(item)
+	if err != nil {
+		return nil, err
+	}
+	return &internal_grpc.UpdateResponse{
+		Message: "success",
+	}, nil
 }
-func (obj *PersonService) Delete(context context.Context, _ *internal_grpc.DeleteRequest) (*internal_grpc.DeleteResponse, error) {
-	return &internal_grpc.DeleteResponse{}, nil
+func (obj *PersonService) Delete(context context.Context, in *internal_grpc.DeleteRequest) (*internal_grpc.DeleteResponse, error) {
+
+	err := obj.repo.Delete(int(in.Id))
+	if err != nil {
+		return nil, err
+	}
+	return &internal_grpc.DeleteResponse{
+		Message: "success",
+	}, nil
 }
-func (obj *PersonService) Searach(context context.Context, _ *internal_grpc.SearachRequest) (*internal_grpc.SearachResponse, error) {
-	return &internal_grpc.SearachResponse{}, nil
+func (obj *PersonService) Searach(context context.Context, in *internal_grpc.SearachRequest) (*internal_grpc.SearachResponse, error) {
+	result, err := obj.repo.Search(in.Query)
+	if err != nil {
+		return nil, err
+	}
+	var items []*internal_grpc.Person
+	for _, res := range result {
+		items = append(items, &internal_grpc.Person{
+			Id:      int32(res.Id),
+			Name:    res.Name,
+			Address: res.Address,
+			Salary:  res.Salary,
+		})
+	}
+	return &internal_grpc.SearachResponse{
+		Result: items,
+	}, nil
 }

@@ -38,9 +38,10 @@ message GetByIdRequest{
 }
 
 message UpdateRequest{
-    string name = 1;
-    string address = 2;
-    float salary = 3; 
+    int32 id =1 ;
+    string name = 2;
+    string address = 3;
+    float salary = 4; 
 }
 
 message DeleteRequest{
@@ -57,7 +58,7 @@ message CreateResponse {
 }
 
 message GetByIdResponse {
-    repeated Person result  = 1;
+    Person result  = 1;
 }
 
 message UpdateResponse {

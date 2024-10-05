@@ -44,7 +44,7 @@ func (obj *PersonRepository) Update(item *models.Person) error {
 
 func (obj *PersonRepository) Search(query string) ([]*models.Person, error) {
 	var items []*models.Person
-	for id, item := range obj.items {
+	for _, item := range obj.items {
 		if item.Name == query || item.Address == query {
 			items = append(items, item)
 		}
